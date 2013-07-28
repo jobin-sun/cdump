@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html,body{margin:0;}
+#container{margin:20px auto;background:#0f0}
+.cell,.flag,.bomb{background-repeat:no-repeat;}
+.cell{float:left;border:1px #ccc solid;width:24px;height:24px;background-image:url(images/heart.gif);}
+.flag{background-image:url(images/flag.gif);}
+.bomb{background-image:url(images/flag.gif);}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<script>
+$(function(){
+	$("#container").bind("contextmenu",function(e){
+		return false;
+	});
+	$(".cell").live({
+		"click":function(event){
+			//console.log(event.which);
+		},
+		"mouseup":function(event){
+			if(event.which==3){
+				$(this).toggleClass("flag");
+			}
+			return false;
+		}
+	})
+})
+</script>
+</head>
+<body>
+<div id="container">
+	<script>
+		var cellWidth=24;
+		var cellHeight=cellWidth;
+		var height=23;
+		var width=16;
+		document.getElementById("container").style.height=(cellHeight+2)*height+"px";
+		document.getElementById("container").style.width=(cellWidth+2)*width+"px";
+		for(i=0;i<width*height;i++){
+			document.write("<div class='cell'></div>")
+		}
+	</script>
+</div>
+<div style="display:none">
+<img src="images/bomb.gif" />
+<img src="images/heart.gif" />
+<img src="images/flag.gif" />
+</div>
+</body>
+</html>
