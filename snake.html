@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>we all love snake</title>
+<style type="text/css">
+<!--
+body{
+background-color:#66CCFF;
+
+}
+#content {
+	margin:0 auto;
+	width: 400px;
+	height: 600px;
+	background-color:#0033CC;
+}
+.sub{
+	width:8px;
+	height:8px;
+	line-height:8px;
+	float:left;
+	margin:0px;
+	padding:0px;
+	border:solid 1px #999999;
+}
+-->
+</style>
+</head>
+<body>
+<div id="content"><script type="text/javascript">
+for(var i=0; i<2400; i++){
+document.write("<div class='sub'></div>");
+}
+var r=document.getElementById("content").getElementsByTagName("div");
+var snake=new Array();
+var key=39;
+var temp;
+var flag=true;
+var last;
+var food;
+snake[0]=1165;
+snake[1]=1166;
+snake[2]=1167;
+snake[3]=1168;
+snake[4]=1169;
+snake[5]=1170;
+function getFood(){
+	var dd=true;
+	while(dd){
+		food=Math.round(Math.random()*1000)%2400;
+		for(var i=0;i<snake.length;i++){
+			if(food==snake[i]){
+				dd=true;
+				break;
+			}else{
+				dd=false;
+			}
+		}
+	}
+}
+getFood();
+function display(){
+	switch(key){
+	case 40:
+		advance(40);
+		break;
+	case 38:
+		advance(-40);
+		break;
+	case 37:
+		advance(-1);
+		break;
+	case 39:
+		advance(1);
+	}
+	if(flag){
+	flag=false;
+	r[last].style.backgroundColor="transparent";
+	for(var i=0;i<snake.length;i++){
+		r[snake[i]].style.backgroundColor="#F00";
+	}
+	r[food].style.backgroundColor="#F00";
+	flag=true;
+	}
+}
+function advance(x){
+	if((snake[snake.length-1]+x)!=snake[(snake.length-2)]){
+		last=snake[0];
+		for(var i=0;i<(snake.length-1);i++){
+			snake[i]=snake[i+1];
+		}
+		snake[snake.length-1]+=x;
+		switch(x){
+			case 40:{
+				if(snake[snake.length-1]>=2400){
+					snake[snake.length-1]%=40;
+				}
+			}
+				break;
+			case -40:{
+				if(snake[snake.length-1]<0){
+					snake[snake.length-1]+=2400;
+				}
+			}
+				break;
+			case 1:{
+				if(snake[snake.length-1]%40==0){
+					snake[snake.length-1]-=40;
+				}
+			}
+				break;
+			case -1:{
+				if((snake[snake.length-1]+1)%40==0){
+					snake[snake.length-1]+=40;
+				}
+			}
+				break;
+		}
+		if(snake[snake.length-1]==food){
+			snake[snake.length]=food;
+			getFood();
+		}
+		for(i=0;i<snake.length-1;i++){
+			if(snake[snake.length-1]==snake[i]){
+				if(snake[snake.length-1]!=snake[snake.length-2]){
+					over();
+				}
+			}
+		}
+	}else{
+	key=temp;
+	}
+}
+function over(){
+clearInterval(start);
+var over=setInterval(fl,500)
+}
+function fl(){
+for(var i=0;i<snake.length;i++){
+	r[snake[i]].style.backgroundColor="transparent";
+}
+var d=setTimeout(dis,200);
+}
+function dis(){
+for(var i=0;i<snake.length;i++){
+	r[snake[i]].style.backgroundColor="#F00";
+}
+clearTimeout(d);
+}
+display();
+var start=setInterval(display,100);
+if(!document.all) {
+	window.document.addEventListener("keydown",press,false);
+}else{
+	window.document.attachEvent("onkeydown",press);
+}
+function press(e){
+var evt = window.event|| e;
+temp=key;
+key=evt.keyCode||evt.which||evt.charCode;
+if(key!=37&&key!=38&&key!=39&&key!=40){
+key=temp;
+}
+}  
+/*
+document.getElementById("content").addEventListener("keydown",function(e){
+alert(22);
+temp=key;
+key=e.which;
+},false);
+*/
+</script>
+<div style="display:none"><script src="http://s19.cnzz.com/stat.php?id=3194870&web_id=3194870&online=2" language="JavaScript"></script></div>
+</div>
+</body>
+</html>
