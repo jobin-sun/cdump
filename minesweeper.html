@@ -6,13 +6,38 @@ html,body{margin:0;}
 #container{margin:20px auto;background:#ddd}
 .cell,.flag,.bomb{background-repeat:no-repeat;}
 .cell{float:left;border:1px #ccc solid;width:24px;height:24px;}
-.flag{background-image:url(images/heart.gif);}
+.flag{background-image:url(images/heart.gif);background-color:#bbb}
 .bomb{background-image:url(images/flag.gif);}
 .opened{background-color:#bbb}
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 <script>
+var cellWidth=24;
+var cellHeight=cellWidth;
+var height=23;
+var width=16;
+var boomArr;
+var arr;
 $(function(){
+	boomArr=[33,36,37,39,40,43,46,49,51,54,57,59,62,65,67,73,75,78,81,84,88,91,94,97,101,103,107,110,113,118,124,125];
+	arr[height*width-1]=0;
+	for(i=0;i<boomArr.length;i++){
+		arr[boomArr[i]]=-1;
+	}
+	for(i=0;i<arr.length;i++){
+		if(arr[i-width]==-1) arr[i]++;
+		if(arr[i+width]==-1) arr[i}++;
+		if(i%width>=1){
+			if(arr[i-width-1]==-1) arr[i]++;
+			if(arr[i-1]==-1) arr[i]++;
+			if(arr[i+width-1]==-1) arr[i]++;
+		}
+		if(i%width<width-1){
+			if(arr[i-width+1]==-1) arr[i]++;
+			if(arr[i+1]==-1) arr[i]++;
+			if(arr[i+width+1]==-1) arr[i]++;
+		}
+	}
 	$("#container").bind("contextmenu",function(e){
 		return false;
 	});
@@ -38,14 +63,10 @@ $(function(){
 <body>
 <div id="container">
 	<script>
-		var cellWidth=24;
-		var cellHeight=cellWidth;
-		var height=23;
-		var width=16;
 		document.getElementById("container").style.height=(cellHeight+2)*height+"px";
 		document.getElementById("container").style.width=(cellWidth+2)*width+"px";
 		for(i=0;i<width*height;i++){
-			document.write("<div class='cell'></div>")
+			document.write("<div class='cell'>"+arr[i]+"</div>")
 		}
 	</script>
 </div>
