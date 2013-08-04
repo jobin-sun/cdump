@@ -18,10 +18,15 @@ $(function(){
 	});
 	$(".cell").live({
 		"click":function(event){
-			$(this).addClass("opened");
+			if(!$(this).hasClass("flag")){
+				$(this).addClass("opened");
+			}
 		},
 		"mouseup":function(event){
 			if(event.which==3){
+				if($(this).hasClass("opened")){
+					return false;
+				}
 				$(this).toggleClass("flag");
 			}
 			return false;
