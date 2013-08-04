@@ -8,6 +8,7 @@ html,body{margin:0;}
 .cell{float:left;border:1px #ccc solid;width:24px;height:24px;}
 .flag{background-image:url(images/heart.gif);}
 .bomb{background-image:url(images/flag.gif);}
+.opened{background-color:#bbb}
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 <script>
@@ -17,7 +18,7 @@ $(function(){
 	});
 	$(".cell").live({
 		"click":function(event){
-			$(this).css("background-color","#bbb");
+			$(this).addClass("opened");
 		},
 		"mouseup":function(event){
 			if(event.which==3){
