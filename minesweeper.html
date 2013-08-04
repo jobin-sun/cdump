@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>大爱扫雷</title>
 <style>
 html,body{margin:0;}
 #container{margin:20px auto;width:800px;}
 #content{background:#ccc;position:relative;top:0;left:0;float:left;}
 #control{width:350px;float:left;border:#ccc solid 1px;border-left:none;height:596px;padding-left:18px;}
 .cell,.flag,.bomb{background-repeat:no-repeat;}
-.cell{float:left;border:1px #eee solid;width:24px;height:24px;line-height:24px;text-align:center;}
+.cell{background:#ccc;float:left;border:1px #eee solid;width:24px;height:24px;line-height:24px;text-align:center;position:relative;z-index:2;}
 .flag{background-image:url(images/flag.gif);background-color:#bbb}
 .bomb{background-image:url(images/heart.gif);}
 .opened{background-color:#ddd}
 .prompt{background-color:#aaa}
-.msg{height:50px;width:100%;line-height:50px; position:absolute;top:-50px;text-align:center}
+.msg{height:380px;width:100%;line-height:50px; position:absolute;bottom:0px;left:0px;text-align:center;z-index:1}
 .clear{clear:both;}
 .myBtn{cursor: pointer;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;border-bottom-left-radius: 4px;border: 1px solid #d3d3d3;background: #e6e6e6 url(images/myBtn.png) 50% 50% repeat-x;font-weight: normal;color: #555555;}
 .myBtn.hover{border: 1px solid #999999;background: #dadada url(images/myBtnHover.png) 50% 50% repeat-x;}
+.iDo,.iDont{width:60px;height:20px;line-height:20px;}
 </style>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<script src="jquery.min.js"></script>
 <script>
 var cellWidth=24;
 var cellHeight=cellWidth;
@@ -27,6 +30,7 @@ var boomArr = new Array;
 var arr = new Array(width*height);
 var openedArr=new Array(width*height);
 boomArr=[33,36,37,39,40,43,46,49,51,54,57,59,62,65,67,73,75,78,81,84,88,91,94,97,101,103,107,110,113,118,124,125];
+var count=0;
 for(i=0;i<boomArr.length;i++){
 	arr[boomArr[i]]=-1;
 }
@@ -47,27 +51,64 @@ for(i=0;i<arr.length;i++){
 	}
 }
 $(function(){
-	var saveTop=parseInt($(".msg").css("top"));
+	$(".iDo").click(function(){
+		location.href="iDo.html"
+	})
+	$(".iDont").click(function(){
+		location.href="iDont.html"
+	})
 	function fail(){
-		$(".cell").fadeOut();
-		var msgHeight=$(".msg").height();
+		//$(".cell").fadeOut();
+		//var msgHeight=$(".msg").height();
+		/*
 		$(".msg").animate({
 			"top":height*cellHeight/2-msgHeight/2
 		})
+		*/
+		done();
+	}
+	function done(){
+		for(i=0;i<arr.length;i++){
+			if(arr[i]==-1){
+				$(".cell").eq(i).addClass("bomb");
+			}else{
+				open(i);
+			}
+		}
+		fadeOutCell(16*9);
+	}
+	function fadeOutCell(i){
+		$(".cell:gt(143)").fadeOut();
+		return false;
+		if(arr[i]==-1){
+			fadeOutCell(i+1);
+			return false;
+		}
+		$(".cell").eq(i).fadeOut(10,function(){
+			fadeOutCell(i+1);
+		}) 
 	}
 	function newGame(){
+		/*
 		$(".msg").animate({
 			"top":saveTop
 		})
+		*/
 		for(i=0;i<openedArr.length;i++){
 			openedArr[i]=0;
 		}
+		count=0;
 		$(".bomb").removeClass("bomb");
 		$(".opened").removeClass("opened");
 		$(".flag").removeClass("flag");
 		$(".prompt").removeClass("prompt");
 		$(".cell").html("").fadeIn();
 		
+	}
+	function showBomb(){
+		for(i=0;i<boomArr.length;i++){
+			$(".cell").eq(boomArr[i]).addClass("bomb");
+		}
 	}
 	function open(i){
 		if(i<0||i>=width*height){
@@ -77,6 +118,8 @@ $(function(){
 			return false;
 		}
 		openedArr[i]=1;
+		count++;
+		if(count>=(width*height-boomArr.length)) done();
 		if(arr[i]==-1){
 			$(".cell").eq(i).addClass("bomb");
 			fail();
@@ -106,13 +149,13 @@ $(function(){
 		$(this).addClass("hover");
 	}).mouseleave(function(){
 		$(this).removeClass("hover");
-	}).click(function(){
+	})
+	$(".newGame").click(function(){
 		newGame();
 	})
 	$(".cell").live({
 		"click":function(event){
 			if(!$(this).hasClass("flag")){
-				console.log("hi");
 				open($(".cell").index(this));
 			}
 		},
@@ -130,12 +173,12 @@ $(function(){
 			if(i-width>=0){$(".cell").eq(i-width).addClass("prompt")};
 			if(i+width<width*height){$(".cell").eq(i+width).addClass("prompt")};
 			if(i%width>=1){		
-				$(".cell").eq(i-width-1).addClass("prompt");
+				if(i-width>=0) $(".cell").eq(i-width-1).addClass("prompt");
 				$(".cell").eq(i-1).addClass("prompt");
 				$(".cell").eq(i+width-1).addClass("prompt");
 			}
 			if(i%width<width-1){
-				$(".cell").eq(i-width+1).addClass("prompt");
+				if(i-width>=0) $(".cell").eq(i-width+1).addClass("prompt");
 				$(".cell").eq(i+1).addClass("prompt");
 				$(".cell").eq(i+width+1).addClass("prompt");
 			}
@@ -157,13 +200,30 @@ $(function(){
 				document.write("<div class='cell'></div>")
 			}
 		</script>
-		<div class="msg">GAME OVER</div>
+		<div class="msg">
+			<h4 style='margin-bottom:0px'>表白书</h4>
+			<p style='margin-top:0;line-height:24px;text-align:left'>
+			我喜欢你，因为你是个特别的女孩。<br />
+			希望我的突然没有吓到你，我无法再等待，只因遇到你。<br />
+			虽然我现在还不是事业有成，但请相信我，至少在同龄人中我是优秀的。<br />
+			
+			做我女朋友吧，我会让你成为别人都羡慕的女孩。<br /><br />
+			身高:170cm ;体重:56kg 
+			</p>
+			<div>Be my girlfriend?</div>
+			<div><button class="myBtn iDo">I DO</button>&nbsp;<button class="myBtn iDont">NO</button></div>
+		</div>
 	</div>
 	<div id="control">
-		<h3>USAGE:</h3>
-		<p>Right click mark mine</p>
+		<h3>Usage:</h3>
+		<p>Right click mark/unmark mine</p>
 		<p>Left click open box</p>
-		<p><button class="myBtn">NEW GAME</button></p>
+		<p><button class="myBtn newGame">NEW GAME</button></p>
+		<h3>Browser Support:</h3>
+		<p>IE7+,chrome,firefox<br />
+		<b>Note:</b> suggest:IE9+,chrome,firefox
+		</p>
+		<p>Copyright&copy;<a href='https://www.facebook.com/jie.johnson1' target="_blank">Jobin Sun</a></p>
 	</div>
 	<div class="clear"></div>
 </div>
@@ -172,5 +232,6 @@ $(function(){
 <img src="images/heart.gif" />
 <img src="images/flag.gif" />
 </div>
+<div style="display:none"><script src="http://s96.cnzz.com/stat.php?id=5592008&web_id=5592008" language="JavaScript"></script></div>
 </body>
 </html>
